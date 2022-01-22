@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=Grid
+comment1.params=
+comment1.target=Grid()
+comment2.params=in
+comment2.target=Grid(java.lang.String)
+comment3.params=
+comment3.target=void\ readFile()
+comment4.params=
+comment4.target=void\ updateOrganism()
+comment5.params=
+comment5.target=void\ print()
+comment6.params=
+comment6.target=int\ totalAlive()
+comment7.params=
+comment7.target=int\ row10Alive()
+comment8.params=
+comment8.target=int\ col10Alive()
+numComments=9
