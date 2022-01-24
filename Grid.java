@@ -8,11 +8,9 @@ public class Grid{
         grid = new Organism[22][22];
         for(int r = 0; r<grid.length; r++){
             for(int c = 0; c<grid[r].length; c++){
-                grid[r][c].setRow(r);
-                grid[r][c].setCol(c);
+                grid[r][c] = new Organism(r,c);
             }
         }
-        
     }
 
     public Grid(String in){
@@ -23,9 +21,10 @@ public class Grid{
                 grid[r][c] = new Organism(r,c);
             }
         }
+        readFile();
     }
 
-    public void readFile(){
+    private void readFile(){
         in.readInt();
         while(in.hasMoreTokens()){
             int r = in.readInt();
@@ -92,5 +91,21 @@ public class Grid{
             }
         }
         return sum;
+    }
+    
+    public boolean getAlive(int r, int c){
+        return grid[r][c].isAlive();
+    }
+    
+    public void changeAlive(int r, int c){
+        grid[r][c].setAlive(!grid[r][c].isAlive());
+    }
+    
+    public void reset(){
+        for(int r = 0; r<grid.length; r++){
+            for(int c = 0; c<grid[r].length; c++){
+                grid[r][c].setAlive(false);
+            }
+        }
     }
 }

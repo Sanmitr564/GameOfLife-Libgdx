@@ -30,6 +30,11 @@ public class FirstDrawing extends ApplicationAdapter
     private BitmapFont font; //used to draw fonts (text)
     private SpriteBatch batch; //also needed to draw fonts (text)
 
+    private Grid board;
+    private boolean isPlaying;
+    private int timer;
+    int generation;
+
     @Override//called once when we start the game
     public void create(){
 
@@ -39,13 +44,30 @@ public class FirstDrawing extends ApplicationAdapter
         font = new BitmapFont(); 
         batch = new SpriteBatch();//if you want to use images instead of using ShapeRenderer 
 
+        board = new Grid(/*"lifeNums.txt"*/);
+        isPlaying = false;
+        timer = 1;
+        //board.readFile();
+
     }
 
     @Override//called 60 times a second
     public void render(){
         preRender();
-        
+        drawBoard();
+        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+            board.updateOrganism();
+            generation++;
+            GLOBAL.IS_PLAYING = false;
+        }else if(GLOBAL.IS_PLAYING && timer%GLOBAL.UPDATE_SPEED==0){
+            board.updateOrganism();
+            generation++;
+        }
+        click();
+        control();
+        timer++;
     }
+
     @Override
     public void resize(int width, int height){
         viewport.update(width, height, true); 
@@ -56,7 +78,7 @@ public class FirstDrawing extends ApplicationAdapter
         renderer.dispose(); 
         batch.dispose(); 
     }
-    
+
     public void preRender(){
         viewport.apply(); 
 
@@ -66,5 +88,59 @@ public class FirstDrawing extends ApplicationAdapter
 
         //draw everything on the screen
         renderer.setProjectionMatrix(viewport.getCamera().combined);
+    }
+
+    private void drawBoard(){
+        renderer.begin(ShapeType.Filled);
+        for(int y = 0; y<20; y++){
+            for(int x = 0; x<20; x++){
+                renderer.setColor(Color.WHITE);
+                if(board.getAlive(20-y,x+1)){
+                    renderer.setColor(Color.RED);
+                }
+                renderer.rect(1+x*(GLOBAL.SQUARE_SIZE+2), 1+y*(GLOBAL.SQUARE_SIZE+2), GLOBAL.SQUARE_SIZE, GLOBAL.SQUARE_SIZE);
+            }
+        }
+        renderer.end();
+    }
+
+    private void click(){
+        int mouseX = -1;
+        int mouseY = -1;
+        Vector2 mouseClick = new Vector2(-1,-1);
+        if(Gdx.input.justTouched()){
+            mouseX = Gdx.input.getX();
+            mouseY = Gdx.input.getY();
+        }
+        mouseClick = viewport.unproject(new Vector2(mouseX,mouseY));
+
+        if(mouseClick.x>0 && mouseClick.x<800){
+            int r = 20-(int)mouseClick.y/(GLOBAL.SQUARE_SIZE+2);
+            int c = 1+(int)mouseClick.x/(GLOBAL.SQUARE_SIZE+2);
+
+            board.changeAlive(r,c);
+
+            //System.out.println(r + " " + c);
+        }
+    }
+
+    private void control(){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.R)){
+            board.reset();
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            GLOBAL.IS_PLAYING = !GLOBAL.IS_PLAYING;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
+            if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+                GLOBAL.UPDATE_SPEED -= 5;
+            }else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
+                GLOBAL.UPDATE_SPEED += 5;
+            }
+        }else if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+            GLOBAL.UPDATE_SPEED -= 5;
+        }else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
+            GLOBAL.UPDATE_SPEED += 5;
+        }
     }
 }

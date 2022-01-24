@@ -2,8 +2,8 @@ public class Organism{
     private int neighbors;
     private int r;
     private int c;
-    boolean alive;
-
+    private boolean alive;
+    
     public Organism(){
         neighbors = 0;
         r = 0;

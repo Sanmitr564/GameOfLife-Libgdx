@@ -1,7 +1,8 @@
+
 public class Main{
     public static void main(String[] args){
         Grid board = new Grid("lifeNums.txt");
-        board.readFile();
+        //board.readFile();
         System.out.println("Generation 0");
         board.print();
         for(int i = 0; i<5; i++){
@@ -14,3 +15,4 @@ public class Main{
         System.out.println("Alive in column 10: " + board.col10Alive());
     }
 }
+
