@@ -62,7 +62,8 @@ public class FirstDrawing extends ApplicationAdapter
         control();
         timer++;
         System.out.print(GLOBAL.generation);
-        System.out.println(" " + GLOBAL.snapshots.length);
+        System.out.print(" " + GLOBAL.snapshots.length);
+        System.out.println(" " + GLOBAL.SQUARE_SIZE);
     }
 
     @Override
@@ -89,12 +90,12 @@ public class FirstDrawing extends ApplicationAdapter
 
     private void drawBoard(){
         renderer.begin(ShapeType.Filled);
-        for(int y = 0; y<20; y++){
-            for(int x = 0; x<20; x++){
+        for(int y = 0; y<GLOBAL.SIDE_LENGTH; y++){
+            for(int x = 0; x<GLOBAL.SIDE_LENGTH; x++){
                 renderer.setColor(Color.WHITE);
-                if(board.getAlive(20-y,x+1)){
+                /*if(board.getAlive(GLOBAL.SIDE_LENGTH-y,x+1)){
                     renderer.setColor(Color.RED);
-                }
+                }*/
                 renderer.rect(1+x*(GLOBAL.SQUARE_SIZE+2), 1+y*(GLOBAL.SQUARE_SIZE+2), GLOBAL.SQUARE_SIZE, GLOBAL.SQUARE_SIZE);
             }
         }
@@ -112,7 +113,7 @@ public class FirstDrawing extends ApplicationAdapter
         mouseClick = viewport.unproject(new Vector2(mouseX,mouseY));
 
         if(mouseClick.x>0 && mouseClick.x<800){
-            int r = 20-(int)mouseClick.y/(GLOBAL.SQUARE_SIZE+2);
+            int r = GLOBAL.SIDE_LENGTH-(int)mouseClick.y/(GLOBAL.SQUARE_SIZE+2);
             int c = 1+(int)mouseClick.x/(GLOBAL.SQUARE_SIZE+2);
 
             board.changeAlive(r,c);
@@ -154,17 +155,24 @@ public class FirstDrawing extends ApplicationAdapter
         }else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
             GLOBAL.UPDATE_SPEED += 5;
         }
+
+        if(Gdx.input.isKeyJustPressed(Keys.MINUS)){
+            sizeDecrease();
+        }else if(Gdx.input.isKeyJustPressed(Keys.EQUALS)){
+            sizeIncrease();
+        }
     }
 
     private void setGrid(){
         board.setGrid(GLOBAL.snapshots[GLOBAL.generation]);
     }
 
+    //TODO replace with array clone
     private void setSnapshot(){
         if (GLOBAL.generation == GLOBAL.snapshots.length - 1) {
             int length = GLOBAL.snapshots.length;
             Organism[][][] temp = GLOBAL.snapshots;
-            GLOBAL.snapshots = new Organism[length*2][22][22];
+            GLOBAL.snapshots = new Organism[length*2][GLOBAL.ARRAY_LENGTH][GLOBAL.ARRAY_LENGTH];
             for(int r = 0; r<temp.length; r++){
                 GLOBAL.snapshots[r] = temp[r];
             }
@@ -175,6 +183,14 @@ public class FirstDrawing extends ApplicationAdapter
             }
         }
     }
-    
-    
+    //TODO Add a way to expand/shrink the play area
+    private void sizeDecrease(){
+        GLOBAL.SIDE_LENGTH -= GLOBAL.SIDE_LENGTH>1 ? 1:0;
+        GLOBAL.SQUARE_SIZE = ((float)GLOBAL.WORLD_WIDTH/GLOBAL.SIDE_LENGTH)-2;
+    }
+
+    private void sizeIncrease(){
+        GLOBAL.SIDE_LENGTH++;
+        GLOBAL.SQUARE_SIZE = ((float)GLOBAL.WORLD_WIDTH/GLOBAL.SIDE_LENGTH)-2;
+    }
 }
