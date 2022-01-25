@@ -113,8 +113,8 @@ public class FirstDrawing extends ApplicationAdapter
         mouseClick = viewport.unproject(new Vector2(mouseX,mouseY));
 
         if(mouseClick.x>0 && mouseClick.x<800){
-            int r = GLOBAL.SIDE_LENGTH-(int)mouseClick.y/(GLOBAL.SQUARE_SIZE+2);
-            int c = 1+(int)mouseClick.x/(GLOBAL.SQUARE_SIZE+2);
+            int r = (int)(GLOBAL.SIDE_LENGTH-(int)mouseClick.y/(GLOBAL.SQUARE_SIZE+2));
+            int c = (int)(1+(int)mouseClick.x/(GLOBAL.SQUARE_SIZE+2));
 
             board.changeAlive(r,c);
 
