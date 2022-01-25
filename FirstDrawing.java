@@ -33,7 +33,6 @@ public class FirstDrawing extends ApplicationAdapter
     private Grid board;
     private boolean isPlaying;
     private int timer;
-    int generation;
 
     @Override//called once when we start the game
     public void create(){
@@ -44,7 +43,7 @@ public class FirstDrawing extends ApplicationAdapter
         font = new BitmapFont(); 
         batch = new SpriteBatch();//if you want to use images instead of using ShapeRenderer 
 
-        board = new Grid(/*"lifeNums.txt"*/);
+        board = new Grid("lifeNums.txt");
         isPlaying = false;
         timer = 1;
         //board.readFile();
@@ -55,17 +54,15 @@ public class FirstDrawing extends ApplicationAdapter
     public void render(){
         preRender();
         drawBoard();
-        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
-            board.updateOrganism();
-            generation++;
-            GLOBAL.IS_PLAYING = false;
-        }else if(GLOBAL.IS_PLAYING && timer%GLOBAL.UPDATE_SPEED==0){
-            board.updateOrganism();
-            generation++;
+        if(GLOBAL.generation > GLOBAL.totalGenerations){
+            GLOBAL.totalGenerations = GLOBAL.generation;
+            setSnapshot();
         }
         click();
         control();
         timer++;
+        System.out.print(GLOBAL.generation);
+        System.out.println(" " + GLOBAL.snapshots.length);
     }
 
     @Override
@@ -125,22 +122,59 @@ public class FirstDrawing extends ApplicationAdapter
     }
 
     private void control(){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+            board.updateOrganism();
+            GLOBAL.generation++;
+            GLOBAL.IS_PLAYING = false;
+        }else if(GLOBAL.IS_PLAYING && timer%GLOBAL.UPDATE_SPEED==0){
+            board.updateOrganism();
+            GLOBAL.generation++;
+        }else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+            GLOBAL.generation -= (GLOBAL.generation==0) ? 0 : 1;
+            setGrid();
+            GLOBAL.IS_PLAYING = false;
+        }
+       
         if(Gdx.input.isKeyJustPressed(Input.Keys.R)){
             board.reset();
         }
+        
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             GLOBAL.IS_PLAYING = !GLOBAL.IS_PLAYING;
         }
+        
         if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
             if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
-                GLOBAL.UPDATE_SPEED -= 5;
+                GLOBAL.UPDATE_SPEED -= (GLOBAL.UPDATE_SPEED == 1) ? 0 : 1;
             }else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
                 GLOBAL.UPDATE_SPEED += 5;
             }
         }else if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
-            GLOBAL.UPDATE_SPEED -= 5;
+            GLOBAL.UPDATE_SPEED -= GLOBAL.UPDATE_SPEED<6 ? 0 : 5;
         }else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
             GLOBAL.UPDATE_SPEED += 5;
         }
     }
+
+    private void setGrid(){
+        board.setGrid(GLOBAL.snapshots[GLOBAL.generation]);
+    }
+
+    private void setSnapshot(){
+        if (GLOBAL.generation == GLOBAL.snapshots.length - 1) {
+            int length = GLOBAL.snapshots.length;
+            Organism[][][] temp = GLOBAL.snapshots;
+            GLOBAL.snapshots = new Organism[length*2][22][22];
+            for(int r = 0; r<temp.length; r++){
+                GLOBAL.snapshots[r] = temp[r];
+            }
+        }
+        for(int r = 1; r<board.getGrid().length-1; r++){
+            for(int c = 1; c<board.getGrid()[r].length-1; c++){
+                GLOBAL.snapshots[GLOBAL.generation][r][c] = new Organism(r,c,board.getGrid()[r][c].isAlive());
+            }
+        }
+    }
+    
+    
 }

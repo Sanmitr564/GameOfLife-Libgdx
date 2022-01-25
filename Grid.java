@@ -33,7 +33,7 @@ public class Grid{
             grid[r][c].setAlive(true);
         }
     }
-    
+
     public void updateOrganism(){
         for(int r = 1; r<grid.length-1; r++){
             for(int c = 1; c<grid[r].length-1; c++){
@@ -46,10 +46,10 @@ public class Grid{
             }
         }
     }
-    
+
     public void print(){
         System.out.println("\t12345678901234567890");
-        
+
         for(int r = 1; r<grid.length-1; r++){
             System.out.print(r + "\t");
             for(int c = 1; c<grid[r].length-1; c++){
@@ -61,7 +61,7 @@ public class Grid{
             System.out.println();
         }
     }
-    
+
     public int totalAlive(){
         int sum = 0;
         for(int r = 1; r<grid.length-1; r++){
@@ -72,7 +72,7 @@ public class Grid{
         }
         return sum;
     }
-    
+
     public int row10Alive(){
         int sum = 0;
         for(int c = 1; c<grid[11].length; c++){
@@ -82,7 +82,7 @@ public class Grid{
         }
         return sum;
     }
-    
+
     public int col10Alive(){
         int sum = 0;
         for(int r = 1; r<grid[11].length; r++){
@@ -92,20 +92,32 @@ public class Grid{
         }
         return sum;
     }
-    
+
     public boolean getAlive(int r, int c){
         return grid[r][c].isAlive();
     }
-    
+
     public void changeAlive(int r, int c){
         grid[r][c].setAlive(!grid[r][c].isAlive());
     }
-    
+
     public void reset(){
         for(int r = 0; r<grid.length; r++){
             for(int c = 0; c<grid[r].length; c++){
                 grid[r][c].setAlive(false);
             }
         }
+    }
+
+    public void setGrid(Organism[][] o){
+        for(int r = 1; r<o.length-1; r++){
+            for(int c = 1; c<o[r].length-1; c++){
+                grid[r][c].setAlive(o[r][c].isAlive());
+            }
+        }
+    }
+
+    public Organism[][] getGrid(){
+        return grid;
     }
 }

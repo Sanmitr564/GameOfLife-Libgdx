@@ -1,4 +1,4 @@
-
+/*
 public class Main{
     public static void main(String[] args){
         Grid board = new Grid("lifeNums.txt");
@@ -15,4 +15,4 @@ public class Main{
         System.out.println("Alive in column 10: " + board.col10Alive());
     }
 }
-
+*/
