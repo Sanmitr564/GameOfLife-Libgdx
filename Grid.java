@@ -29,8 +29,8 @@ public class Grid{
     private void readFile(){
         in.readInt();
         while(in.hasMoreTokens()){
-            int r = in.readInt() + GLOBAL.OFFSET;
-            int c = in.readInt() + GLOBAL.OFFSET;
+            int r = in.readInt() - GLOBAL.OFFSET;
+            int c = in.readInt() - GLOBAL.OFFSET;
 
             grid[r][c].setAlive(true);
         }
@@ -131,5 +131,14 @@ public class Grid{
 
     public Organism[][] getGrid(){
         return grid;
+    }
+
+    public void resetGrid(int l){
+        grid = new Organism[l][l];
+        for(int r = 0; r<l; r++){
+            for(int c = 0; c<l; c++){
+                grid[r][c] = new Organism(r,c);
+            }
+        }
     }
 }

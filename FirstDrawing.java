@@ -17,7 +17,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Intersector; 
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.*;
-import com.badlogic.gdx.*; 
+import com.badlogic.gdx.*;
+
+import java.util.Arrays;
 
 //NOTE: Always reset the JVM before compiling (it is the small loop arrow in the
 //bottom right corner of the project window)!! 
@@ -95,7 +97,7 @@ public class FirstDrawing extends ApplicationAdapter
             for(int x = 0; x<GLOBAL.SIDE_LENGTH; x++){
                 renderer.setColor(Color.WHITE);
                 //TODO un-comment when done testing
-                if(board.getAlive(GLOBAL.SIDE_LENGTH-y,x+1)){
+                if(board.getAlive(GLOBAL.SIDE_LENGTH-(y)-GLOBAL.OFFSET,x+1-GLOBAL.OFFSET)){
                     renderer.setColor(Color.RED);
                 }
                 renderer.rect(1+x*(GLOBAL.SQUARE_SIZE+2), 1+y*(GLOBAL.SQUARE_SIZE+2), GLOBAL.SQUARE_SIZE, GLOBAL.SQUARE_SIZE);
@@ -115,8 +117,8 @@ public class FirstDrawing extends ApplicationAdapter
         Vector2 mouseClick = viewport.unproject(new Vector2(mouseX,mouseY));
 
         if(mouseClick.x>0 && mouseClick.x<800){
-            int r = (int)(1+GLOBAL.SIDE_LENGTH-(int)mouseClick.y/(GLOBAL.SQUARE_SIZE+2));
-            int c = (int)(1+(int)mouseClick.x/(GLOBAL.SQUARE_SIZE+2));
+            int r = (int)(1+GLOBAL.SIDE_LENGTH-(int)mouseClick.y/(GLOBAL.SQUARE_SIZE+2)) - GLOBAL.OFFSET;
+            int c = (int)(1+(int)mouseClick.x/(GLOBAL.SQUARE_SIZE+2))-GLOBAL.OFFSET;
 
             board.changeAlive(r,c);
 
@@ -186,19 +188,57 @@ public class FirstDrawing extends ApplicationAdapter
         }
     }
 
-    //TODO Add a way to expand/shrink the play area
     private void sizeDecrease(){
         GLOBAL.SIDE_LENGTH -= GLOBAL.SIDE_LENGTH>1 ? 1:0;
         GLOBAL.SQUARE_SIZE = ((float)GLOBAL.WORLD_WIDTH/GLOBAL.SIDE_LENGTH)-2;
+        GLOBAL.OFFSET = (GLOBAL.SIDE_LENGTH-GLOBAL.INITIAL_SIDE_LENGTH)/2;
     }
 
+    //TODO make array reassign when increasing size
     private void sizeIncrease(){
         GLOBAL.SIDE_LENGTH++;
         GLOBAL.SQUARE_SIZE = ((float)GLOBAL.WORLD_WIDTH/GLOBAL.SIDE_LENGTH)-2;
-        if(GLOBAL.SIDE_LENGTH > GLOBAL.TOTAL_SIDE_LENGTH)
-            GLOBAL.TOTAL_SIDE_LENGTH = GLOBAL.SIDE_LENGTH;
+        GLOBAL.OFFSET = (GLOBAL.SIDE_LENGTH-GLOBAL.TOTAL_SIDE_LENGTH)/2;
+        if(GLOBAL.SIDE_LENGTH > GLOBAL.TOTAL_SIDE_LENGTH-1) {
+            GLOBAL.TOTAL_SIDE_LENGTH *= 2;
+            Organism[][][] tempSnapshot = new Organism[GLOBAL.snapshots.length][GLOBAL.snapshots[0].length][GLOBAL.snapshots[0][0].length];
+            //TODO add a loop to initialize tempSnapshot
+            initializeTempSnapshot(tempSnapshot);
+            //Organism[][] tempBoard = board.getGrid().clone();
+            int length = GLOBAL.snapshots.length;
+            GLOBAL.snapshots = new Organism[length*2][GLOBAL.TOTAL_SIDE_LENGTH][GLOBAL.TOTAL_SIDE_LENGTH];
+            board.resetGrid(GLOBAL.TOTAL_SIDE_LENGTH);
+            for (int o1 = 0; o1 < GLOBAL.snapshots.length; o1++) {
+                for (int o2 = 0; o2 < GLOBAL.snapshots[o1].length; o2++) {
+                    for (int o3 = 0; o3 < GLOBAL.snapshots[o1][o2].length; o3++) {
+                        GLOBAL.snapshots[o1][o2][o3] = new Organism(o2, o3, false);
+                    }
+                }
+            }
+
+            for (int o1 = 0; o1 < GLOBAL.snapshots.length / 2; o1++) {
+                for (int o2 = GLOBAL.snapshots[o1].length / 4; o2 < GLOBAL.snapshots[o1].length * 3 / 4; o2++) {
+                    for (int o3 = GLOBAL.snapshots[o1][o2].length / 4; o3 < GLOBAL.snapshots[o1][o2].length * 3 / 4; o3++) {
+                        GLOBAL.snapshots[o1] = tempSnapshot[o1];
+                    }
+                }
+            }
+
+            board.setGrid(GLOBAL.snapshots[GLOBAL.snapshots.length / 2]);
+            GLOBAL.OFFSET = (GLOBAL.SIDE_LENGTH-GLOBAL.TOTAL_SIDE_LENGTH)/2;
+
+        }
     }
     //FIXME
     // - use expanding arrays to change size of play field
     // - don't make array smaller, only change rendered field
+    private void initializeTempSnapshot(Organism[][][] a){
+        for (int o1 = 0; o1 < GLOBAL.snapshots.length; o1++) {
+            for (int o2 = 0; o2 < GLOBAL.snapshots[o1].length; o2++) {
+                for (int o3 = 0; o3 < GLOBAL.snapshots[o1][o2].length; o3++) {
+                    a[o1] = GLOBAL.snapshots[o1].clone();
+                }
+            }
+        }
+    }
 }
