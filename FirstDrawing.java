@@ -61,6 +61,7 @@ public class FirstDrawing extends ApplicationAdapter
         click();
         control();
         timer++;
+        //TODO comment out when complete
         System.out.print(GLOBAL.generation);
         System.out.print(" " + GLOBAL.snapshots.length);
         System.out.println(" " + GLOBAL.SQUARE_SIZE);
@@ -93,9 +94,10 @@ public class FirstDrawing extends ApplicationAdapter
         for(int y = 0; y<GLOBAL.SIDE_LENGTH; y++){
             for(int x = 0; x<GLOBAL.SIDE_LENGTH; x++){
                 renderer.setColor(Color.WHITE);
-                /*if(board.getAlive(GLOBAL.SIDE_LENGTH-y,x+1)){
+                //TODO un-comment when done testing
+                if(board.getAlive(GLOBAL.SIDE_LENGTH-y,x+1)){
                     renderer.setColor(Color.RED);
-                }*/
+                }
                 renderer.rect(1+x*(GLOBAL.SQUARE_SIZE+2), 1+y*(GLOBAL.SQUARE_SIZE+2), GLOBAL.SQUARE_SIZE, GLOBAL.SQUARE_SIZE);
             }
         }
@@ -105,15 +107,15 @@ public class FirstDrawing extends ApplicationAdapter
     private void click(){
         int mouseX = -1;
         int mouseY = -1;
-        Vector2 mouseClick = new Vector2(-1,-1);
+        //Vector2 mouseClick = new Vector2(-1,-1);
         if(Gdx.input.justTouched()){
             mouseX = Gdx.input.getX();
             mouseY = Gdx.input.getY();
         }
-        mouseClick = viewport.unproject(new Vector2(mouseX,mouseY));
+        Vector2 mouseClick = viewport.unproject(new Vector2(mouseX,mouseY));
 
         if(mouseClick.x>0 && mouseClick.x<800){
-            int r = (int)(GLOBAL.SIDE_LENGTH-(int)mouseClick.y/(GLOBAL.SQUARE_SIZE+2));
+            int r = (int)(1+GLOBAL.SIDE_LENGTH-(int)mouseClick.y/(GLOBAL.SQUARE_SIZE+2));
             int c = (int)(1+(int)mouseClick.x/(GLOBAL.SQUARE_SIZE+2));
 
             board.changeAlive(r,c);
@@ -183,6 +185,7 @@ public class FirstDrawing extends ApplicationAdapter
             }
         }
     }
+
     //TODO Add a way to expand/shrink the play area
     private void sizeDecrease(){
         GLOBAL.SIDE_LENGTH -= GLOBAL.SIDE_LENGTH>1 ? 1:0;
@@ -192,5 +195,10 @@ public class FirstDrawing extends ApplicationAdapter
     private void sizeIncrease(){
         GLOBAL.SIDE_LENGTH++;
         GLOBAL.SQUARE_SIZE = ((float)GLOBAL.WORLD_WIDTH/GLOBAL.SIDE_LENGTH)-2;
+        if(GLOBAL.SIDE_LENGTH > GLOBAL.TOTAL_SIDE_LENGTH)
+            GLOBAL.TOTAL_SIDE_LENGTH = GLOBAL.SIDE_LENGTH;
     }
+    //FIXME
+    // - use expanding arrays to change size of play field
+    // - don't make array smaller, only change rendered field
 }
