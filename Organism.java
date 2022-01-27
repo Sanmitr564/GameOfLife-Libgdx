@@ -39,11 +39,17 @@ public class Organism{
         alive = false;
     }
 
-    /*
+    public Organism(Organism o){
+        neighbors = o.getNeighbors();
+        r = o.getR();
+        c = o.getC();
+        alive = o.isAlive();
+    }
+
     public int getNeighbors(){
     return neighbors;
     }
-
+    /*
     public void setNeighbors(int n){
     neighbors = n;
     }
@@ -94,5 +100,21 @@ public class Organism{
     public void update(Organism[][] arr){
         updateNeighbors(arr);
         updateLife();
+    }
+
+    public int getR(){
+        return r;
+    }
+
+    public int getC(){
+        return c;
+    }
+
+    public void addR(int i){
+        r+=i;
+    }
+
+    public void addC(int i){
+        c+=i;
     }
 }
