@@ -228,8 +228,7 @@ public class FirstDrawing extends ApplicationAdapter {
                 }
             }
 
-            //board.setGrid(GLOBAL.snapshots[GLOBAL.snapshots.length / 2]);
-            GLOBAL.OFFSET = (GLOBAL.SIDE_LENGTH - GLOBAL.TOTAL_SIDE_LENGTH) / 2;
+            //turtle
 
         }
     }
