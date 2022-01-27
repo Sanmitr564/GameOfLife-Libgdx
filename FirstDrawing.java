@@ -202,45 +202,34 @@ public class FirstDrawing extends ApplicationAdapter {
             //NOTE
             // - Use global.arraylength to set lengths not total side length
             // - update global.arraylength after setting tempsnapshot to current arraylength
+            // - The first and last columns and rows of the organism 2d arrays are null
+            // - use expanding arrays to change size of play field
+            // - don't make array smaller, only change rendered field
             Organism[][][] tempSnapshot = GLOBAL.snapshots;
             GLOBAL.TOTAL_SIDE_LENGTH *= 2;
             GLOBAL.ARRAY_LENGTH = GLOBAL.TOTAL_SIDE_LENGTH + 2;
-
-            //Organism[][] tempBoard = board.getGrid().clone();
             int length = GLOBAL.snapshots.length;
             GLOBAL.snapshots = new Organism[length][GLOBAL.ARRAY_LENGTH][GLOBAL.ARRAY_LENGTH];
-            tempSnapshot[0][1][1].setAlive(true);
-            //NOTE The first and last columns and rows of the organism 2d arrays are null
-            board.resetGrid(GLOBAL.ARRAY_LENGTH);
-            for (int o1 = 0; o1 < GLOBAL.snapshots.length; o1++) {
-                for (int o2 = 0; o2 < GLOBAL.snapshots[o1].length; o2++) {
-                    for (int o3 = 0; o3 < GLOBAL.snapshots[o1][o2].length; o3++) {
-                        GLOBAL.snapshots[o1][o2][o3] = new Organism(o2, o3, false);
+            GLOBAL.OFFSET = (GLOBAL.SIDE_LENGTH - GLOBAL.TOTAL_SIDE_LENGTH) / 2;
+            for(int gen = 0; gen<GLOBAL.snapshots.length; gen++){
+                for(int row = 0; row<GLOBAL.snapshots[gen].length; row++){
+                    for(int col = 0; col<GLOBAL.snapshots[gen][row].length; col++){
+                        GLOBAL.snapshots[gen][row][col] = new Organism(row,col);
                     }
                 }
             }
 
-            for (int o1 = 0; o1 < GLOBAL.snapshots.length / 2; o1++) {
-                for (int o2 = GLOBAL.TOTAL_SIDE_LENGTH / 4; o2 < GLOBAL.TOTAL_SIDE_LENGTH * 3 / 4; o2++) {
-                    System.out.println(o2 - GLOBAL.TOTAL_SIDE_LENGTH / 4);
-                    System.out.println(GLOBAL.TOTAL_SIDE_LENGTH);
-                    System.arraycopy(tempSnapshot[o1][o2 - GLOBAL.TOTAL_SIDE_LENGTH / 4], 0, GLOBAL.snapshots[o1][o2], GLOBAL.TOTAL_SIDE_LENGTH / 4, tempSnapshot[o1][o2].length);
+            for(int gen = 0; gen< GLOBAL.generation; gen++){
+                for(int row = 1; row<tempSnapshot[gen].length-1; row++){
+                    for(int col = 1; col<tempSnapshot[gen][row].length-1; col++){
+                        GLOBAL.snapshots[gen][row+GLOBAL.OFFSET][col+GLOBAL.OFFSET].setAlive(tempSnapshot[gen][row][col].isAlive());
+                        GLOBAL.snapshots[gen][row+GLOBAL.OFFSET][col+GLOBAL.OFFSET].addC(GLOBAL.OFFSET);
+                        GLOBAL.snapshots[gen][row+GLOBAL.OFFSET][col+GLOBAL.OFFSET].addR(GLOBAL.OFFSET);
+                    }
                 }
             }
-
-            //turtle
-
-        }
-    }
-
-    //NOTE
-    // - use expanding arrays to change size of play field
-    // - don't make array smaller, only change rendered field
-    private void initializeTempSnapshot(Organism[][][] a) {
-        for (int o1 = 0; o1 < GLOBAL.snapshots.length; o1++) {
-            for (int o2 = 0; o2 < GLOBAL.snapshots[o1].length; o2++) {
-                a[o1][o2] = GLOBAL.snapshots[o1][o2];
-            }
+            board.resetGrid(GLOBAL.ARRAY_LENGTH);
+            board.setGrid(GLOBAL.snapshots[GLOBAL.generation]);
         }
     }
 }
