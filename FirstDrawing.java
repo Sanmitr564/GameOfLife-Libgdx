@@ -112,6 +112,7 @@ public class FirstDrawing extends ApplicationAdapter {
         if (Gdx.input.justTouched()) {
             mouseX = Gdx.input.getX();
             mouseY = Gdx.input.getY();
+            isPlaying = false;
         }
         Vector2 mouseClick = viewport.unproject(new Vector2(mouseX, mouseY));
 
@@ -179,9 +180,20 @@ public class FirstDrawing extends ApplicationAdapter {
             for (int r = 0; r < temp.length; r++) {
                 GLOBAL.snapshots[r] = temp[r];
             }
+            /*
+            for (int gen = temp.length; gen  < length*2; gen++){
+                for(int row = 0; row < GLOBAL.snapshots[gen].length; row++){
+                    for(int col = 0; col < GLOBAL.snapshots[gen][row].length; col++){
+                        GLOBAL.snapshots[gen][row][col] = new Organism(row, col);
+                    }
+                }
+            }
+
+             */
         }
-        for (int r = 1; r < board.getGrid().length - 1; r++) {
-            for (int c = 1; c < board.getGrid()[r].length - 1; c++) {
+        //NOTE replace uninitialized edges if doesn't work
+        for (int r = 0; r < board.getGrid().length; r++) {
+            for (int c = 0; c < board.getGrid()[r].length; c++) {
                 GLOBAL.snapshots[GLOBAL.generation][r][c] = new Organism(r, c, board.getGrid()[r][c].isAlive());
             }
         }
@@ -211,23 +223,30 @@ public class FirstDrawing extends ApplicationAdapter {
             int length = GLOBAL.snapshots.length;
             GLOBAL.snapshots = new Organism[length][GLOBAL.ARRAY_LENGTH][GLOBAL.ARRAY_LENGTH];
             GLOBAL.OFFSET = (GLOBAL.SIDE_LENGTH - GLOBAL.TOTAL_SIDE_LENGTH) / 2;
-            for(int gen = 0; gen<GLOBAL.snapshots.length; gen++){
-                for(int row = 0; row<GLOBAL.snapshots[gen].length; row++){
-                    for(int col = 0; col<GLOBAL.snapshots[gen][row].length; col++){
-                        GLOBAL.snapshots[gen][row][col] = new Organism(row,col);
+            for (int gen = 0; gen < GLOBAL.snapshots.length; gen++) {
+                for (int row = 0; row < GLOBAL.snapshots[gen].length; row++) {
+                    for (int col = 0; col < GLOBAL.snapshots[gen][row].length; col++) {
+                        GLOBAL.snapshots[gen][row][col] = new Organism(row, col);
                     }
                 }
             }
 
-            for(int gen = 0; gen< GLOBAL.generation; gen++){
-                for(int row = 1; row<tempSnapshot[gen].length-1; row++){
-                    for(int col = 1; col<tempSnapshot[gen][row].length-1; col++){
-                        GLOBAL.snapshots[gen][row+GLOBAL.OFFSET][col+GLOBAL.OFFSET].setAlive(tempSnapshot[gen][row][col].isAlive());
-                        GLOBAL.snapshots[gen][row+GLOBAL.OFFSET][col+GLOBAL.OFFSET].addC(GLOBAL.OFFSET);
-                        GLOBAL.snapshots[gen][row+GLOBAL.OFFSET][col+GLOBAL.OFFSET].addR(GLOBAL.OFFSET);
+            for (int gen = 0; gen < GLOBAL.generation; gen++) {
+
+                for (int row = 1; row < tempSnapshot[gen].length - 1; row++) {
+                    for (int col = 1; col < tempSnapshot[gen][row].length - 1; col++) {
+                        GLOBAL.snapshots[gen][row + GLOBAL.TOTAL_SIDE_LENGTH / 4][col + GLOBAL.TOTAL_SIDE_LENGTH / 4].setAlive(tempSnapshot[gen][row][col].isAlive());
+                        //GLOBAL.snapshots[gen][row+GLOBAL.TOTAL_SIDE_LENGTH/4][col+GLOBAL.TOTAL_SIDE_LENGTH/4].addC(GLOBAL.TOTAL_SIDE_LENGTH/4);
+                        //GLOBAL.snapshots[gen][row+GLOBAL.TOTAL_SIDE_LENGTH/4][col+GLOBAL.TOTAL_SIDE_LENGTH/4].addR(GLOBAL.TOTAL_SIDE_LENGTH/4);
                     }
                 }
             }
+            for (int row = 1; row < tempSnapshot[GLOBAL.generation].length - 1; row++) {
+                for (int col = 1; col < tempSnapshot[GLOBAL.generation][row].length - 1; col++) {
+                    GLOBAL.snapshots[GLOBAL.generation][row + GLOBAL.TOTAL_SIDE_LENGTH / 4][col + GLOBAL.TOTAL_SIDE_LENGTH / 4].setAlive(board.getGrid()[row][col].isAlive());
+                }
+            }
+
             board.resetGrid(GLOBAL.ARRAY_LENGTH);
             board.setGrid(GLOBAL.snapshots[GLOBAL.generation]);
         }

@@ -1,53 +1,53 @@
-public class Organism{
+public class Organism {
     private int neighbors;
     private int r;
     private int c;
     private boolean alive;
-    
-    public Organism(){
+
+    public Organism() {
         neighbors = 0;
         r = 0;
         c = 0;
         alive = false;
     }
 
-    public Organism(int neighbors){
+    public Organism(int neighbors) {
         this.neighbors = neighbors;
         r = 0;
         c = 0;
         alive = false;
     }
 
-    public Organism(int neighbors, int r, int c, boolean alive){
+    public Organism(int neighbors, int r, int c, boolean alive) {
         this.neighbors = neighbors;
         this.r = r;
         this.c = c;
         this.alive = alive;
     }
 
-    public Organism(int r, int c, boolean alive){
+    public Organism(int r, int c, boolean alive) {
         neighbors = 0;
         this.r = r;
         this.c = c;
         this.alive = alive;
     }
 
-    public Organism(int r, int c){
+    public Organism(int r, int c) {
         neighbors = 0;
         this.r = r;
         this.c = c;
         alive = false;
     }
 
-    public Organism(Organism o){
+    public Organism(Organism o) {
         neighbors = o.getNeighbors();
         r = o.getR();
         c = o.getC();
         alive = o.isAlive();
     }
 
-    public int getNeighbors(){
-    return neighbors;
+    public int getNeighbors() {
+        return neighbors;
     }
     /*
     public void setNeighbors(int n){
@@ -63,58 +63,58 @@ public class Organism{
     }
     */
 
-    public boolean isAlive(){
+    public boolean isAlive() {
         return alive;
     }
 
-    public void setAlive(boolean b){
+    public void setAlive(boolean b) {
         alive = b;
     }
 
-    public void updateLife(){
-        if(neighbors == 3)
+    public void updateLife() {
+        if (neighbors == 3)
             alive = true;
-        else if(neighbors<2 || neighbors>3)
+        else if (neighbors < 2 || neighbors > 3)
             alive = false;
     }
 
-    public void setRow(int r){
+    public void setRow(int r) {
         this.r = r;
     }
 
-    public void setCol(int c){
+    public void setCol(int c) {
         this.c = c;
     }
 
-    public void updateNeighbors(Organism[][] arr){
+    public void updateNeighbors(Organism[][] arr) {
         neighbors = 0;
-        for(int i = -1; i<2; i++){
-            for(int j = -1; j<2; j++){
-                if(arr[r+i][c+j].isAlive() && !(i==0 && j==0)){
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                if (arr[r + i][c + j].isAlive() && !(i == 0 && j == 0)) {
                     neighbors++;
                 }
             }
         }
     }
 
-    public void update(Organism[][] arr){
+    public void update(Organism[][] arr) {
         updateNeighbors(arr);
         updateLife();
     }
 
-    public int getR(){
+    public int getR() {
         return r;
     }
 
-    public int getC(){
+    public int getC() {
         return c;
     }
 
-    public void addR(int i){
-        r+=i;
+    public void addR(int i) {
+        r += i;
     }
 
-    public void addC(int i){
-        c+=i;
+    public void addC(int i) {
+        c += i;
     }
 }

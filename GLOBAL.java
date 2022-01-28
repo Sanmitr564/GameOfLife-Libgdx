@@ -9,8 +9,8 @@ public class GLOBAL{
     public static int generation = 0;
     public static int totalGenerations = -1;
     
-    public static final int INITIAL_SIDE_LENGTH = 32;
-    public static int TOTAL_SIDE_LENGTH = INITIAL_SIDE_LENGTH;
+    //public static final int INITIAL_SIDE_LENGTH = 32;
+    public static int TOTAL_SIDE_LENGTH = 32;
     public static int SIDE_LENGTH = 20;
     public static int ARRAY_LENGTH = TOTAL_SIDE_LENGTH+2;
 
