@@ -1,0 +1,28 @@
+#BlueJ class context
+comment0.target=Organism
+comment1.params=
+comment1.target=Organism()
+comment10.params=c
+comment10.target=void\ setCol(int)
+comment11.params=arr
+comment11.target=void\ updateNeighbors(Organism[][])
+comment12.params=arr
+comment12.target=void\ update(Organism[][])
+comment2.params=neighbors
+comment2.target=Organism(int)
+comment3.params=neighbors\ r\ c\ alive
+comment3.target=Organism(int,\ int,\ int,\ boolean)
+comment4.params=r\ c\ alive
+comment4.target=Organism(int,\ int,\ boolean)
+comment5.params=r\ c
+comment5.target=Organism(int,\ int)
+comment6.params=
+comment6.target=boolean\ isAlive()
+comment6.text=\r\n\ \ \ \ public\ int\ getNeighbors(){\r\n\ \ \ \ return\ neighbors;\r\n\ \ \ \ }\r\n\r\n\ \ \ \ public\ void\ setNeighbors(int\ n){\r\n\ \ \ \ neighbors\ \=\ n;\r\n\ \ \ \ }\r\n\r\n\ \ \ \ public\ int\ getRow(){\r\n\ \ \ \ return\ r;\r\n\ \ \ \ }\r\n\r\n\ \ \ \ public\ int\ getCol(){\r\n\ \ \ \ return\ c;\r\n\ \ \ \ }\r\n
+comment7.params=b
+comment7.target=void\ setAlive(boolean)
+comment8.params=
+comment8.target=void\ updateLife()
+comment9.params=r
+comment9.target=void\ setRow(int)
+numComments=13
